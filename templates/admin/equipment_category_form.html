@@ -1,0 +1,66 @@
+{% extends 'admin/base.html' %}
+{% block title %}{% if item %}Редактировать{% else %}Создать{% endif %} категорию{% endblock %}
+
+{% block content %}
+<h1 class="admin__h1">
+  {% if item %}Редактировать категорию{% else %}Новая категория{% endif %}
+</h1>
+<p class="admin__subtitle">
+  <a href="{{ url_for('admin.equipment_categories_list') }}" class="admin-card__link">← К списку</a>
+</p>
+
+<form method="POST" class="admin-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="admin-form__grid">
+    <div class="admin-form__col">
+      <div class="admin-form__group">
+        <label>Название (RU) *</label>
+        <input type="text" name="name_ru" required value="{{ item.name_ru if item else '' }}">
+      </div>
+
+      <div class="admin-form__group">
+        <label>Название (EN)</label>
+        <input type="text" name="name_en" value="{{ item.name_en or '' if item else '' }}">
+      </div>
+
+      <div class="admin-form__group">
+        <label>Slug (латиницей)</label>
+        <input type="text" name="slug" placeholder="auto-sgeneriruetsya"
+               value="{{ item.slug if item else '' }}">
+        <small>Оставьте пустым — сгенерируется автоматически. Менять после публикации не рекомендуется.</small>
+      </div>
+    </div>
+
+    <div class="admin-form__col admin-form__col--side">
+      <div class="admin-form__group">
+        <label>Иконка (Font Awesome)</label>
+        <input type="text" name="icon" placeholder="fa-database"
+               value="{{ item.icon or '' if item else '' }}">
+        <small>Например: fa-database, fa-shower, fa-cog, fa-tint</small>
+      </div>
+
+      <div class="admin-form__group">
+        <label>Порядок сортировки</label>
+        <input type="number" name="sort_order" value="{{ item.sort_order if item else 0 }}">
+        <small>Меньше число = левее в фильтрах</small>
+      </div>
+
+      <div class="admin-form__group">
+        <label class="admin-form__check">
+          <input type="checkbox" name="is_published" value="1"
+                 {% if not item or item.is_published %}checked{% endif %}>
+          Показывать в фильтрах
+        </label>
+      </div>
+
+      <div class="admin-form__actions">
+        <button type="submit" class="admin-btn admin-btn--accent">
+          {% if item %}Сохранить{% else %}Создать{% endif %}
+        </button>
+        <a href="{{ url_for('admin.equipment_categories_list') }}" class="admin-btn">Отмена</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

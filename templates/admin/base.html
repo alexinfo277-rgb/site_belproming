@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Админка{% endblock %} — БелПромИнжиниринг</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body class="admin">
+
+  <aside class="admin__sidebar">
+    <a href="{{ url_for('admin.dashboard') }}" class="admin__logo">
+      <span class="logo-bpi">БПИ</span>
+      <span>Админка</span>
+    </a>
+
+    <nav class="admin__nav">
+      <a href="{{ url_for('admin.dashboard') }}"
+         class="admin__nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> Дашборд
+      </a>
+      <a href="{{ url_for('admin.requests_list') }}"
+         class="admin__nav-link {% if request.endpoint and 'requests' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-envelope"></i> Заявки
+      </a>
+      <a href="{{ url_for('admin.news_list') }}"
+         class="admin__nav-link {% if request.endpoint and 'news' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-newspaper"></i> Новости
+      </a>
+      <a href="{{ url_for('admin.projects_list') }}"
+         class="admin__nav-link {% if request.endpoint and 'project' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-images"></i> Проекты
+      </a>
+      <a href="{{ url_for('admin.equipment_list') }}"
+         class="admin__nav-link {% if request.endpoint and 'equipment' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-cogs"></i> Оборудование
+      </a>
+      <a href="{{ url_for('admin.equipment_categories_list') }}"
+        class="admin__nav-link {% if 'equipment_categor' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-tags"></i> Категории
+      </a>
+    </nav>
+
+    <div class="admin__footer">
+      <div class="admin__user">
+        <i class="fas fa-user-circle"></i>
+        {{ current_user.username }}
+      </div>
+      <a href="{{ url_for('main.index') }}" class="admin__link" target="_blank">
+        <i class="fas fa-external-link-alt"></i> На сайт
+      </a>
+      <a href="{{ url_for('admin.logout') }}" class="admin__link">
+        <i class="fas fa-sign-out-alt"></i> Выйти
+      </a>
+    </div>
+  </aside>
+
+  <main class="admin__main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="admin__flash admin__flash--{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ─── CSRF auto-inject: выполняется ПОСЛЕ построения DOM ─── #}
+  <script>
+    (function () {
+      var token = "{{ csrf_token() }}";
+      document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(function (form) {
+        if (!form.querySelector('input[name="csrf_token"]')) {
+          var i = document.createElement('input');
+          i.type = 'hidden';
+          i.name = 'csrf_token';
+          i.value = token;
+          form.appendChild(i);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

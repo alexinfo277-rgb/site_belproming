@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}{{ t.equipment_title }} — БелПромИнжиниринг{% endblock %}
+
+{% block content %}
+
+<section class="service-page">
+  <div class="container">
+
+    {# ─── Кнопка «Назад» ─────────────────── #}
+    <a href="{{ url_for('main.index') }}#services" class="service-page__back">
+      {{ t.srv_back }}
+    </a>
+
+    <span class="section-tag" data-aos="fade-up">{{ t.equipment_tag }}</span>
+    <h1 class="service-page__title" data-aos="fade-up">{{ t.equipment_title }}</h1>
+    <p class="service-page__lead" data-aos="fade-up">
+      Ёмкости, CIP-станции, пастеризаторы, теплообменники ZIMLLER и другое оборудование
+      для пищевой промышленности — собственного производства.
+    </p>
+
+    {# ─── Фильтры ─────────────────── #}
+    <div class="equipment__filters" data-aos="fade-up">
+      <button class="filter-btn active" data-filter="all">{{ t.eq_filter_all }}</button>
+      {% for c in categories %}
+        <button class="filter-btn" data-filter="{{ c.slug }}">
+          {% if lang == 'en' and c.name_en %}{{ c.name_en }}
+          {% else %}{{ c.name_ru }}{% endif %}
+        </button>
+      {% endfor %}
+    </div>
+
+    {# ─── Сетка карточек ─────────────────── #}
+    <div class="equipment__grid" data-aos="fade-up">
+      {% if equipment %}
+        {% for e in equipment %}
+          <div class="eq-card"
+               data-category="{{ e.category }}"
+               data-title="{% if lang == 'en' and e.title_en %}{{ e.title_en }}{% else %}{{ e.title_ru }}{% endif %}"
+               data-desc="{% if lang == 'en' and e.desc_en %}{{ e.desc_en }}{% else %}{{ e.desc_ru }}{% endif %}"
+               data-image="{% if e.image %}{{ url_for('uploaded_file', filename=e.image) }}{% endif %}">
+            <div class="eq-card__img">
+              {% if e.image %}
+                <img src="{{ url_for('uploaded_file', filename=e.image) }}" alt="{{ e.title_ru }}">
+              {% else %}
+                <div class="eq-card__placeholder"><i class="fas fa-cog"></i></div>
+              {% endif %}
+            </div>
+            <div class="eq-card__body">
+              <h3>
+                {% if lang == 'en' and e.title_en %}{{ e.title_en }}
+                {% else %}{{ e.title_ru }}{% endif %}
+              </h3>
+              <p>
+                {% if lang == 'en' and e.desc_en %}{{ e.desc_en }}
+                {% else %}{{ e.desc_ru }}{% endif %}
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="news-empty">Оборудование пока не добавлено</p>
+      {% endif %}
+    </div>
+
+    {# ─── CTA в едином стиле с услугами ─── #}
+    <div class="service-page__cta" data-aos="fade-up">
+      <h3>{{ t.srv_ready_title }}</h3>
+      <p>{{ t.srv_ready_desc }}</p>
+      <div class="service-page__cta-btns">
+        <a href="{{ url_for('main.index') }}#contacts" class="btn btn--accent btn--lg">
+          {{ t.srv_hero_btn }}
+        </a>
+        <a href="tel:+375296499065" class="btn btn--outline-light btn--lg">
+          <i class="fas fa-phone"></i> {{ t.srv_hero_call }}
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{# ═══ МОДАЛЬНОЕ ОКНО ОБОРУДОВАНИЯ ═══ #}
+<div class="eq-modal" id="eqModal" aria-hidden="true">
+  <div class="eq-modal__backdrop" data-close></div>
+
+  <div class="eq-modal__content">
+    <button class="eq-modal__close" type="button" data-close aria-label="Закрыть">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="eq-modal__grid">
+      <div class="eq-modal__image">
+        <img id="eqModalImage" src="" alt="">
+      </div>
+      <div class="eq-modal__info">
+        <h2 id="eqModalTitle"></h2>
+        <p id="eqModalDesc"></p>
+        <a href="{{ url_for('main.index') }}#contacts" class="btn btn--accent eq-modal__cta">
+          {{ t.srv_hero_btn }} <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

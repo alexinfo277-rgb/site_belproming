@@ -1,0 +1,88 @@
+{% extends 'admin/base.html' %}
+{% block title %}Новости{% endblock %}
+
+{% block content %}
+<div class="admin-head">
+  <div>
+    <h1 class="admin__h1">Новости</h1>
+    <p class="admin__subtitle">Всего: {{ news|length }}</p>
+  </div>
+  <a href="{{ url_for('admin.news_create') }}" class="admin-btn admin-btn--accent">
+    <i class="fas fa-plus"></i> Добавить новость
+  </a>
+</div>
+
+{% if news %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>Заголовок (RU)</th>
+          <th>Slug</th>
+          <th>Статус</th>
+          <th>Дата</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for n in news %}
+          <tr>
+            <td>
+              {% if n.image %}
+                <img src="{{ url_for('uploaded_file', filename=n.image) }}"
+                     alt="" class="admin-thumb">
+              {% else %}
+                <div class="admin-thumb admin-thumb--empty"><i class="far fa-image"></i></div>
+              {% endif %}
+            </td>
+            <td><strong>{{ n.title_ru }}</strong></td>
+            <td><code>{{ n.slug }}</code></td>
+            <td>
+              {% if n.is_published %}
+                <span class="admin-badge admin-badge--done">Опубликовано</span>
+              {% else %}
+                <span class="admin-badge admin-badge--new">Черновик</span>
+              {% endif %}
+            </td>
+            <td class="admin-table__nowrap">{{ n.created_at.strftime('%d.%m.%Y') }}</td>
+            <td class="admin-table__actions">
+              <a href="{{ url_for('news.detail', slug=n.slug) }}" target="_blank"
+                 class="admin-icon-btn" title="Открыть на сайте">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+              <a href="{{ url_for('admin.news_edit', news_id=n.id) }}"
+                 class="admin-icon-btn" title="Редактировать">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form method="POST"
+                    action="{{ url_for('admin.news_toggle', news_id=n.id) }}"
+                    style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="admin-icon-btn"
+                        title="{% if n.is_published %}Снять с публикации{% else %}Опубликовать{% endif %}">
+                  <i class="fas fa-{% if n.is_published %}eye-slash{% else %}eye{% endif %}"></i>
+                </button>
+              </form>
+              <form method="POST"
+                    action="{{ url_for('admin.news_delete', news_id=n.id) }}"
+                    onsubmit="return confirm('Удалить новость «{{ n.title_ru }}»?');"
+                    style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="admin-icon-btn admin-icon-btn--danger" title="Удалить">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="admin-card">
+    <p class="admin-empty">Новостей пока нет. Нажмите «Добавить новость».</p>
+  </div>
+{% endif %}
+
+{% endblock %}

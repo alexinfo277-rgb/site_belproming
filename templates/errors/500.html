@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body_class %}page-inner{% endblock %}
+{% block nav_class %}navbar--solid{% endblock %}
+{% block content %}
+<section class="error-page">
+  <div class="container error-page__inner">
+    <div class="error-page__code">500</div>
+    <h1 class="error-page__title">Что-то пошло не так</h1>
+    <p class="error-page__text">Мы уже знаем о проблеме и скоро её исправим.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn--accent btn--lg">На главную</a>
+  </div>
+</section>
+{% endblock %}

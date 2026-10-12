@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body_class %}page-inner{% endblock %}
+{% block nav_class %}navbar--solid{% endblock %}
+{% block content %}
+<section class="error-page">
+  <div class="container error-page__inner">
+    <div class="error-page__code">404</div>
+    <h1 class="error-page__title">Страница не найдена</h1>
+    <p class="error-page__text">Возможно, ссылка устарела или страница была удалена.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn--accent btn--lg">На главную</a>
+  </div>
+</section>
+{% endblock %}

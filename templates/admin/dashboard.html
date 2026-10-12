@@ -1,0 +1,65 @@
+{% extends 'admin/base.html' %}
+{% block title %}Дашборд{% endblock %}
+
+{% block content %}
+<h1 class="admin__h1">Дашборд</h1>
+<p class="admin__subtitle">Сводка по сайту на {{ now.strftime('%d.%m.%Y') }}</p>
+
+<div class="admin-stats">
+  <a href="{{ url_for('admin.requests_list', status='new') }}" class="admin-stat">
+    <div class="admin-stat__icon admin-stat__icon--accent"><i class="fas fa-envelope"></i></div>
+    <div class="admin-stat__num">{{ stats.requests_new }}</div>
+    <div class="admin-stat__label">Новые заявки</div>
+  </a>
+  <a href="{{ url_for('admin.requests_list', status='in_progress') }}" class="admin-stat">
+    <div class="admin-stat__icon admin-stat__icon--warn"><i class="fas fa-spinner"></i></div>
+    <div class="admin-stat__num">{{ stats.requests_in_progress }}</div>
+    <div class="admin-stat__label">В работе</div>
+  </a>
+  <a href="{{ url_for('admin.requests_list', status='done') }}" class="admin-stat">
+    <div class="admin-stat__icon admin-stat__icon--ok"><i class="fas fa-check"></i></div>
+    <div class="admin-stat__num">{{ stats.requests_done }}</div>
+    <div class="admin-stat__label">Обработано</div>
+  </a>
+  <a href="{{ url_for('admin.requests_list') }}" class="admin-stat">
+    <div class="admin-stat__icon"><i class="fas fa-database"></i></div>
+    <div class="admin-stat__num">{{ stats.requests_total }}</div>
+    <div class="admin-stat__label">Всего заявок</div>
+  </a>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card__head">
+    <h2>Последние заявки</h2>
+    <a href="{{ url_for('admin.requests_list') }}" class="admin-card__link">Все →</a>
+  </div>
+
+  {% if recent_requests %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Имя</th>
+          <th>Email</th>
+          <th>Статус</th>
+          <th>Дата</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in recent_requests %}
+          <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.email }}</td>
+            <td><span class="admin-badge admin-badge--{{ r.status }}">{{ r.status }}</span></td>
+            <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="admin-empty">Заявок пока нет</p>
+  {% endif %}
+</div>
+
+{% endblock %}

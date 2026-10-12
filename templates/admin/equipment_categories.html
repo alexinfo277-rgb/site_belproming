@@ -1,0 +1,87 @@
+{% extends 'admin/base.html' %}
+{% block title %}Категории оборудования{% endblock %}
+
+{% block content %}
+<div class="admin-head">
+  <div>
+    <h1 class="admin__h1">Категории оборудования</h1>
+    <p class="admin__subtitle">Всего: {{ categories|length }}</p>
+  </div>
+  <a href="{{ url_for('admin.equipment_category_create') }}" class="admin-btn admin-btn--accent">
+    <i class="fas fa-plus"></i> Добавить категорию
+  </a>
+</div>
+
+{% if categories %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Порядок</th>
+          <th>Slug</th>
+          <th>Название (RU)</th>
+          <th>Название (EN)</th>
+          <th>Иконка</th>
+          <th>Оборудование</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in categories %}
+          <tr>
+            <td><code>{{ c.sort_order }}</code></td>
+            <td><code>{{ c.slug }}</code></td>
+            <td><strong>{{ c.name_ru }}</strong></td>
+            <td>{{ c.name_en or '—' }}</td>
+            <td>
+              {% if c.icon %}
+                <i class="fas {{ c.icon }}"></i>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>{{ usage[c.slug] }}</td>
+            <td>
+              {% if c.is_published %}
+                <span class="admin-badge admin-badge--done">Видна</span>
+              {% else %}
+                <span class="admin-badge admin-badge--new">Скрыта</span>
+              {% endif %}
+            </td>
+            <td class="admin-table__actions">
+              <a href="{{ url_for('admin.equipment_category_edit', cat_id=c.id) }}"
+                 class="admin-icon-btn" title="Редактировать">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form method="POST"
+                    action="{{ url_for('admin.equipment_category_toggle', cat_id=c.id) }}"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn"
+                        title="{% if c.is_published %}Скрыть с фильтров{% else %}Показать{% endif %}">
+                  <i class="fas fa-{% if c.is_published %}eye-slash{% else %}eye{% endif %}"></i>
+                </button>
+              </form>
+              <form method="POST"
+                    action="{{ url_for('admin.equipment_category_delete', cat_id=c.id) }}"
+                    onsubmit="return confirm('Удалить категорию «{{ c.name_ru }}»?');"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn admin-icon-btn--danger" title="Удалить">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="admin-card">
+    <p class="admin-empty">Категорий пока нет.</p>
+  </div>
+{% endif %}
+
+{% endblock %}

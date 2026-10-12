@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+{% block title %}БелПромИнжиниринг — Инжиниринг полного цикла{% endblock %}
+
+{% block content %}
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+
+  {# ─── Фоновые видео (стопкой) ─── #}
+  <div class="hero__bg-video">
+
+    <video class="hero__video active"
+           autoplay muted playsinline preload="auto"
+           poster="{{ url_for('static', filename='img/hero-poster.webp') }}"
+           data-slide="0">
+      <source src="{{ url_for('static', filename='video/hero.webm') }}" type="video/webm">
+      <source src="{{ url_for('static', filename='video/hero.mp4') }}" type="video/mp4">
+    </video>
+
+    <video class="hero__video"
+           muted playsinline preload="auto"
+           poster="{{ url_for('static', filename='img/hero-poster-2.webp') }}"
+           data-slide="1">
+      <source src="{{ url_for('static', filename='video/hero2.webm') }}" type="video/webm">
+      <source src="{{ url_for('static', filename='video/hero2.mp4') }}" type="video/mp4">
+    </video>
+
+     <video class="hero__video"
+           muted playsinline preload="auto"
+           poster="{{ url_for('static', filename='img/hero-poster-3.webp') }}"
+           data-slide="2">
+      <source src="{{ url_for('static', filename='video/hero3.webm') }}" type="video/webm">
+      <source src="{{ url_for('static', filename='video/hero3.mp4') }}" type="video/mp4">
+    </video>
+
+  </div>
+
+  <div class="hero__veil"></div>
+  <div class="hero__stripe"></div>
+
+  <div class="container">
+    <div class="hero__grid">
+
+      <!-- ЛЕВО: контент -->
+      <div class="hero__content">
+        <div class="hero__eyebrow">
+          {{ t.hero_eyebrow_years }} &nbsp;•&nbsp; {{ t.hero_eyebrow_text }}
+        </div>
+
+        <h1 class="hero__title">
+          {{ t.hero_title_1 }}<br>
+          {{ t.hero_title_2 }}<br>
+          <em>{{ t.hero_title_3 }}</em>
+        </h1>
+
+        <p class="hero__sub">{{ t.hero_sub_new }}</p>
+
+        <div class="hero__btns">
+          <a href="{{ url_for('equipment.catalog') }}" class="btn btn--accent">
+            {{ t.hero_btn_catalog }} <i class="fas fa-arrow-right"></i>
+          </a>
+          <a href="#about" class="btn btn--glass">
+            <i class="fas fa-play"></i> {{ t.hero_btn_about }}
+          </a>
+        </div>
+      </div>
+
+      <!-- ПРАВО: статистика -->
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <div class="hero__stat-n">15<b>+</b></div>
+          <div class="hero__stat-l">{{ t.hero_stat_years }}</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-n">200<b>+</b></div>
+          <div class="hero__stat-l">{{ t.hero_stat_projects }}</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-n">500<b>+</b></div>
+          <div class="hero__stat-l">{{ t.hero_stat_clients }}</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-n">4</div>
+          <div class="hero__stat-l">{{ t.hero_stat_directions }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {# ─── Кружочки-переключатели ─── #}
+  <div class="hero__dots" id="heroDots">
+    <button class="hero__dot active" data-slide="0" type="button" aria-label="Видео 1"></button>
+    <button class="hero__dot" data-slide="1" type="button" aria-label="Видео 2"></button>
+    <button class="hero__dot" data-slide="2" type="button" aria-label="Видео 3"></button>
+  </div>
+
+</section>
+
+<!-- ═══ ОТРАСЛИ ═══ -->
+<section class="section section--paper">
+  <div class="container">
+    <div class="s-head reveal">
+      <div class="s-head__left">
+        <div class="s-tag"><b>{{ t.ind_tag_num }}</b> {{ t.ind_tag }}</div>
+        <h2 class="s-title">{{ t.ind_title }}</h2>
+      </div>
+      <a href="{{ url_for('main.index') }}#contacts" class="s-link">{{ t.ind_all }} <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="ind reveal">
+
+      {# ЛЕВО: список отраслей #}
+      <ul class="ind__list">
+
+        {# 01 — Молочная промышленность (с подсписком) #}
+        <li class="ind__item active" data-industry="dairy">
+          <div class="ind__head">
+            <span class="ind__num">01</span>
+            <span class="ind__name">{{ t.ind_1 }}</span>
+            <i class="fas fa-arrow-right ind__arrow"></i>
+          </div>
+
+          <ul class="ind__sub">
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-1.webp') }}">
+                {{ t.ind_dairy_1 }}
+              </a>
+            </li>
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-2.webp') }}">
+                {{ t.ind_dairy_2 }}
+              </a>
+            </li>
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-3.webp') }}">
+                {{ t.ind_dairy_3 }}
+              </a>
+            </li>
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-4.webp') }}">
+                {{ t.ind_dairy_4 }}
+              </a>
+            </li>
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-5.webp') }}">
+                {{ t.ind_dairy_5 }}
+              </a>
+            </li>
+            <li>
+              <a href="#" data-image="{{ url_for('static', filename='img/industries/dairy-6.webp') }}">
+                {{ t.ind_dairy_6 }}
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        {# 02 — Пищевая промышленность #}
+        <li class="ind__item" data-industry="food">
+          <div class="ind__head">
+            <span class="ind__num">02</span>
+            <span class="ind__name">{{ t.ind_2 }}</span>
+            <i class="fas fa-arrow-right ind__arrow"></i>
+          </div>
+        </li>
+
+        {# 03 — Химическая промышленность #}
+        <li class="ind__item" data-industry="chemical">
+          <div class="ind__head">
+            <span class="ind__num">03</span>
+            <span class="ind__name">{{ t.ind_3 }}</span>
+            <i class="fas fa-arrow-right ind__arrow"></i>
+          </div>
+        </li>
+
+        {# 04 — Производство растительного масла #}
+        <li class="ind__item" data-industry="oil">
+          <div class="ind__head">
+            <span class="ind__num">04</span>
+            <span class="ind__name">{{ t.ind_4 }}</span>
+            <i class="fas fa-arrow-right ind__arrow"></i>
+          </div>
+        </li>
+
+      </ul>
+
+      {# ПРАВО: картинки #}
+      <div class="ind__view ticks">
+        <div class="ind__img active" data-industry="dairy">
+          <img src="{{ url_for('static', filename='img/industries/dairy.webp') }}" alt="{{ t.ind_1 }}">
+        </div>
+        <div class="ind__img" data-industry="food">
+          <img src="{{ url_for('static', filename='img/industries/food.webp') }}" alt="{{ t.ind_2 }}">
+        </div>
+        <div class="ind__img" data-industry="chemical">
+          <img src="{{ url_for('static', filename='img/industries/chemical.webp') }}" alt="{{ t.ind_3 }}">
+        </div>
+        <div class="ind__img" data-industry="oil">
+          <img src="{{ url_for('static', filename='img/industries/oil.webp') }}" alt="{{ t.ind_4 }}">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ УСЛУГИ ═══ -->
+<section class="section section--dark svc-section" id="services">
+  <div class="svc-section__bg"></div>
+  <div class="svc-section__veil"></div>
+
+  <div class="container svc-section__content">
+    <div class="s-head reveal">
+      <div class="s-head__left">
+        <div class="s-tag"><b>{{ t.svc_tag_num }}</b> {{ t.svc_tag }}</div>
+        <h2 class="s-title">{{ t.svc_title }}</h2>
+      </div>
+      <a href="{{ url_for('services.detail', slug='engineering') }}" class="s-link">{{ t.svc_all }} <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="svc">
+      <a href="{{ url_for('services.detail', slug='engineering') }}" class="svc__row">
+        <span class="svc__num">{{ t.svc_1_num }}</span>
+        <span class="svc__title">{{ t.svc_1_title }}</span>
+        <span class="svc__desc">{{ t.svc_1_desc }}</span>
+        <span class="svc__go"><i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a href="{{ url_for('services.detail', slug='installation') }}" class="svc__row">
+        <span class="svc__num">{{ t.svc_2_num }}</span>
+        <span class="svc__title">{{ t.svc_2_title }}</span>
+        <span class="svc__desc">{{ t.svc_2_desc }}</span>
+        <span class="svc__go"><i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a href="{{ url_for('services.detail', slug='machining') }}" class="svc__row">
+        <span class="svc__num">{{ t.svc_3_num }}</span>
+        <span class="svc__title">{{ t.svc_3_title }}</span>
+        <span class="svc__desc">{{ t.svc_3_desc }}</span>
+        <span class="svc__go"><i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a href="{{ url_for('services.detail', slug='automation') }}" class="svc__row">
+        <span class="svc__num">{{ t.svc_4_num }}</span>
+        <span class="svc__title">{{ t.svc_4_title }}</span>
+        <span class="svc__desc">{{ t.svc_4_desc }}</span>
+        <span class="svc__go"><i class="fas fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ОБОРУДОВАНИЕ ═══ -->
+<section class="section section--paper2" id="equipment">
+  <div class="container">
+    <div class="s-head reveal">
+      <div class="s-head__left">
+        <div class="s-tag"><b>{{ t.eqp_tag_num }}</b> {{ t.eqp_tag }}</div>
+        <h2 class="s-title">{{ t.eqp_title }}</h2>
+      </div>
+      <a href="{{ url_for('equipment.catalog') }}" class="s-link">{{ t.eqp_all }} <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="eq-grid reveal">
+      {% for e in equipment_preview %}
+        <a href="{{ url_for('equipment.catalog') }}" class="eq" style="text-decoration:none">
+          <div class="eq__top">
+            <span class="eq__code">EQ-{{ '%02d' % loop.index }}</span>
+            {% if e.image %}
+              <img src="{{ url_for('uploaded_file', filename=e.image) }}"
+                   alt="{{ e.title_ru }}"
+                   style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1">
+            {% else %}
+              <i class="fas fa-cog"></i>
+            {% endif %}
+          </div>
+          <div class="eq__body">
+            <h3>
+              {% if lang == 'en' and e.title_en %}{{ e.title_en }}
+              {% else %}{{ e.title_ru }}{% endif %}
+            </h3>
+            <p>
+              {% if lang == 'en' and e.desc_en %}{{ e.desc_en|truncate(90) }}
+              {% else %}{{ e.desc_ru|truncate(90) }}{% endif %}
+            </p>
+          </div>
+        </a>
+      {% else %}
+        <div class="eq">
+          <div class="eq__top"><i class="fas fa-database"></i></div>
+          <div class="eq__body">
+            <h3>{{ t.eq_tank_food }}</h3>
+            <p>{{ t.eq_tank_food_d|truncate(90) }}</p>
+          </div>
+        </div>
+        <div class="eq">
+          <div class="eq__top"><i class="fas fa-shower"></i></div>
+          <div class="eq__body">
+            <h3>{{ t.eq_cip_3 }}</h3>
+            <p>{{ t.eq_cip_3_d|truncate(90) }}</p>
+          </div>
+        </div>
+        <div class="eq">
+          <div class="eq__top"><i class="fas fa-temperature-high"></i></div>
+          <div class="eq__body">
+            <h3>{{ t.eq_pou }}</h3>
+            <p>{{ t.eq_pou_d|truncate(90) }}</p>
+          </div>
+        </div>
+        <div class="eq">
+          <div class="eq__top"><i class="fas fa-exchange-alt"></i></div>
+          <div class="eq__body">
+            <h3>{{ t.eq_zimller }}</h3>
+            <p>{{ t.eq_zimller_d|truncate(90) }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ПРОЕКТЫ — СЛАЙДЕР ═══ -->
+<section class="section section--paper prj-section" id="projects">
+  <div class="prj-section__bg"></div>
+  <div class="prj-section__veil"></div>
+
+  <div class="container prj-section__content">
+    <div class="s-head reveal">
+      <div class="s-head__left">
+        <div class="s-tag"><b>{{ t.prj_tag_num }}</b> {{ t.prj_tag }}</div>
+        <h2 class="s-title">{{ t.prj_title }}</h2>
+      </div>
+      <a href="{{ url_for('main.index') }}#projects" class="s-link">{{ t.prj_all }} <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="prj-slider reveal">
+
+      <!-- Стрелка назад -->
+      <button class="prj-slider__arrow prj-slider__arrow--prev" aria-label="Назад" type="button">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+
+      <!-- Трек с карточками -->
+      <div class="prj-slider__track" id="projectsTrack">
+        {% for p in projects %}
+          <article class="prj">
+            <div class="prj__img">
+              {% if p.image %}
+                <img src="{{ url_for('uploaded_file', filename=p.image) }}"
+                     alt="{{ p.title_ru }}"
+                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2">
+              {% else %}
+                <i class="fas fa-industry"></i>
+              {% endif %}
+            </div>
+            <div class="prj__body">
+              <h3>
+                {% if lang == 'en' and p.title_en %}{{ p.title_en }}
+                {% else %}{{ p.title_ru }}{% endif %}
+              </h3>
+              <p>
+                {% if lang == 'en' and p.desc_en %}{{ p.desc_en|truncate(140) }}
+                {% else %}{{ p.desc_ru|truncate(140) }}{% endif %}
+              </p>
+            </div>
+          </article>
+        {% else %}
+          <article class="prj">
+            <div class="prj__img"><i class="fas fa-industry"></i></div>
+            <div class="prj__body">
+              <h3>Проекты появятся здесь</h3>
+              <p>Добавьте проекты через админ-панель — они автоматически попадут на главную страницу.</p>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      <!-- Стрелка вперёд -->
+      <button class="prj-slider__arrow prj-slider__arrow--next" aria-label="Вперёд" type="button">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA С ФОРМОЙ ═══ -->
+<section class="section section--paper2" id="contacts">
+  <div class="container">
+    <div class="cta reveal">
+
+      <!-- ЛЕВАЯ ЧАСТЬ: контакты -->
+      <div class="cta__left">
+        <h2>{{ t.cta_title_new }}</h2>
+        <p>{{ t.cta_sub_new }}</p>
+
+        <div class="cta__info">
+          <div class="cta__info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ t.contacts_address }}</span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-phone"></i>
+            <span>+375 (29) 649-90-65 <small>Velcom</small></span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-phone"></i>
+            <span>+375 (29) 193-35-77 <small>МТС</small></span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-envelope"></i>
+            <span>info@belproming.by <small>{{ t.contacts_schedule }}</small></span>
+          </div>
+        </div>
+
+        <div class="cta__messengers">
+          <a href="https://t.me/belproming" class="messenger-btn messenger-btn--tg" target="_blank" rel="noopener">
+            <i class="fab fa-telegram-plane"></i> Telegram
+          </a>
+          <a href="viber://chat?number=375296499065" class="messenger-btn messenger-btn--viber" target="_blank" rel="noopener">
+            <i class="fab fa-viber"></i> Viber
+          </a>
+          <a href="https://wa.me/375296499065" class="messenger-btn messenger-btn--wa" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ ЧАСТЬ: форма -->
+      <div class="cta__form">
+        <h3>{{ t.cta_form_title }}</h3>
+
+        <form id="contactForm" action="/submit" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="form-honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="cta__form-row">
+            <input type="text" name="name" placeholder="{{ t.form_name }}" required>
+            <input type="text" name="company" placeholder="{{ t.form_company }}">
+          </div>
+
+          <div class="cta__form-row">
+            <input type="email" name="email" placeholder="{{ t.form_email }}">
+            <input type="tel" name="phone" placeholder="{{ t.form_phone }}" required>
+          </div>
+
+          <select name="service">
+            <option value="">{{ t.form_service_select }}</option>
+            <option value="engineering">{{ t.form_srv_eng }}</option>
+            <option value="installation">{{ t.form_srv_inst }}</option>
+            <option value="machining">{{ t.form_srv_mach }}</option>
+            <option value="automation">{{ t.form_srv_auto }}</option>
+          </select>
+
+          <textarea name="message" rows="3" placeholder="{{ t.form_message }}"></textarea>
+
+          <label class="cta__form-privacy">
+            <input type="checkbox" name="privacy" value="1" required>
+            <span>{{ t.form_privacy }}</span>
+          </label>
+
+          <button type="submit">
+            {{ t.cta_form_submit }} <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div id="formMessage" class="form-message" style="display:none;margin-top:14px"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="news-page">
+  <div class="container">
+    <span class="section-tag" data-aos="fade-up">{{ t.news_tag }}</span>
+    <h2 class="section-title" data-aos="fade-up">{{ t.news_title }}</h2>
+
+    {% if news %}
+      <div class="news-list">
+        {% for item in news %}
+          <a href="{{ url_for('news.detail', slug=item.slug) }}" class="news-card">
+            <div class="news-card__img">
+              {% if item.image %}
+                <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.title_ru }}">
+              {% else %}
+                <div class="eq-card__placeholder"><i class="far fa-newspaper"></i></div>
+              {% endif %}
+            </div>
+            <div class="news-card__body">
+              <time class="news-card__date">{{ item.created_at.strftime('%d.%m.%Y') }}</time>
+              <h3>
+                {% if g.lang == 'en' and item.title_en %}{{ item.title_en }}
+                {% else %}{{ item.title_ru }}{% endif %}
+              </h3>
+              <span class="news-card__link">{{ t.news_read_more }} <i class="fas fa-arrow-right"></i></span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="news-empty">{{ t.news_empty }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

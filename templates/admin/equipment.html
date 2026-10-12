@@ -1,0 +1,83 @@
+{% extends 'admin/base.html' %}
+{% block title %}Оборудование{% endblock %}
+
+{% block content %}
+<div class="admin-head">
+  <div>
+    <h1 class="admin__h1">Оборудование</h1>
+    <p class="admin__subtitle">Всего: {{ equipment|length }}</p>
+  </div>
+  <a href="{{ url_for('admin.equipment_create') }}" class="admin-btn admin-btn--accent">
+    <i class="fas fa-plus"></i> Добавить оборудование
+  </a>
+</div>
+
+{% if equipment %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>Название (RU)</th>
+          <th>Категория</th>
+          <th>Порядок</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in equipment %}
+          <tr>
+            <td>
+              {% if e.image %}
+                <img src="{{ url_for('uploaded_file', filename=e.image) }}" alt="" class="admin-thumb">
+              {% else %}
+                <div class="admin-thumb admin-thumb--empty"><i class="far fa-image"></i></div>
+              {% endif %}
+            </td>
+            <td><strong>{{ e.title_ru }}</strong></td>
+            <td><code>{{ e.category }}</code></td>
+            <td><code>{{ e.sort_order }}</code></td>
+            <td>
+              {% if e.is_published %}
+                <span class="admin-badge admin-badge--done">Опубликовано</span>
+              {% else %}
+                <span class="admin-badge admin-badge--new">Черновик</span>
+              {% endif %}
+            </td>
+            <td class="admin-table__actions">
+              <a href="{{ url_for('admin.equipment_edit', item_id=e.id) }}"
+                 class="admin-icon-btn" title="Редактировать">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form method="POST"
+                    action="{{ url_for('admin.equipment_toggle', item_id=e.id) }}"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn"
+                        title="{% if e.is_published %}Снять с публикации{% else %}Опубликовать{% endif %}">
+                  <i class="fas fa-{% if e.is_published %}eye-slash{% else %}eye{% endif %}"></i>
+                </button>
+              </form>
+              <form method="POST"
+                    action="{{ url_for('admin.equipment_delete', item_id=e.id) }}"
+                    onsubmit="return confirm('Удалить «{{ e.title_ru }}»?');"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn admin-icon-btn--danger" title="Удалить">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="admin-card">
+    <p class="admin-empty">Оборудования пока нет. Нажмите «Добавить оборудование».</p>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'services/_base.html' %}
+{% set page_tag = 'Инжиниринг' %}
+{% set page_title = t.srv_engineering %}
+{% set page_lead = t.eng_hero_lead %}
+
+{% block includes %}
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-drafting-compass"></i></div>
+    <h3>{{ t.eng_incl_1 }}</h3>
+    <p>{{ t.eng_incl_1_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-project-diagram"></i></div>
+    <h3>{{ t.eng_incl_2 }}</h3>
+    <p>{{ t.eng_incl_2_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-cube"></i></div>
+    <h3>{{ t.eng_incl_3 }}</h3>
+    <p>{{ t.eng_incl_3_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-list-check"></i></div>
+    <h3>{{ t.eng_incl_4 }}</h3>
+    <p>{{ t.eng_incl_4_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-eye"></i></div>
+    <h3>{{ t.eng_incl_5 }}</h3>
+    <p>{{ t.eng_incl_5_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-calculator"></i></div>
+    <h3>{{ t.eng_incl_6 }}</h3>
+    <p>{{ t.eng_incl_6_d }}</p>
+  </div>
+
+{% endblock %}

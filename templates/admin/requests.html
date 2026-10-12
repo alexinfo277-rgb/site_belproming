@@ -1,0 +1,84 @@
+{% extends 'admin/base.html' %}
+{% block title %}Заявки{% endblock %}
+
+{% block content %}
+<h1 class="admin__h1">Заявки</h1>
+<p class="admin__subtitle">Всего: {{ requests|length }}</p>
+
+<div class="admin-filters">
+  <a href="{{ url_for('admin.requests_list') }}"
+     class="admin-filter {% if not current_status %}active{% endif %}">Все</a>
+  <a href="{{ url_for('admin.requests_list', status='new') }}"
+     class="admin-filter {% if current_status == 'new' %}active{% endif %}">Новые</a>
+  <a href="{{ url_for('admin.requests_list', status='in_progress') }}"
+     class="admin-filter {% if current_status == 'in_progress' %}active{% endif %}">В работе</a>
+  <a href="{{ url_for('admin.requests_list', status='done') }}"
+     class="admin-filter {% if current_status == 'done' %}active{% endif %}">Обработано</a>
+</div>
+
+{% if requests %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Дата</th>
+          <th>Имя</th>
+          <th>Контакты</th>
+          <th>Услуга</th>
+          <th>Сообщение</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+          <tr>
+            <td>{{ r.id }}</td>
+            <td class="admin-table__nowrap">{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            <td>
+              <strong>{{ r.name }}</strong>
+              {% if r.company %}<br><small>{{ r.company }}</small>{% endif %}
+            </td>
+            <td>
+              {% if r.email %}<div><i class="fas fa-envelope"></i> <a href="mailto:{{ r.email }}">{{ r.email }}</a></div>{% endif %}
+              {% if r.phone %}<div><i class="fas fa-phone"></i> <a href="tel:{{ r.phone }}">{{ r.phone }}</a></div>{% endif %}
+            </td>
+            <td>{{ r.service or '—' }}</td>
+            <td class="admin-table__message">
+              {{ (r.message or '—')[:120] }}{% if r.message and r.message|length > 120 %}…{% endif %}
+            </td>
+            <td>
+              <form method="POST"
+                    action="{{ url_for('admin.request_set_status', req_id=r.id) }}"
+                    class="admin-status-form">
+                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="status" onchange="this.form.submit()" class="admin-status-select admin-status-select--{{ r.status }}">
+                  <option value="new" {% if r.status == 'new' %}selected{% endif %}>Новая</option>
+                  <option value="in_progress" {% if r.status == 'in_progress' %}selected{% endif %}>В работе</option>
+                  <option value="done" {% if r.status == 'done' %}selected{% endif %}>Обработано</option>
+                </select>
+              </form>
+            </td>
+            <td>
+              <form method="POST"
+                    action="{{ url_for('admin.request_delete', req_id=r.id) }}"
+                    onsubmit="return confirm('Удалить заявку #{{ r.id }}?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn admin-icon-btn--danger" title="Удалить">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="admin-card">
+    <p class="admin-empty">Заявок нет</p>
+  </div>
+{% endif %}
+
+{% endblock %}

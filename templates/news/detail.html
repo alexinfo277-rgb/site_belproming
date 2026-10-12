@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="news-detail">
+  <div class="container">
+    <a href="{{ url_for('news.list_news') }}" class="news-back">{{ t.news_back }}</a>
+
+    <article class="news-article">
+      <header class="news-article__header">
+        <time class="news-article__date">
+          {{ t.news_published_on }}: {{ item.created_at.strftime('%d.%m.%Y') }}
+        </time>
+        <h1 class="news-article__title">{{ title }}</h1>
+      </header>
+
+      {% if item.image %}
+        <div class="news-article__image">
+          <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ title }}">
+        </div>
+      {% endif %}
+
+      <div class="news-article__body">
+        {{ body|safe }}
+      </div>
+    </article>
+  </div>
+</section>
+
+{% endblock %}

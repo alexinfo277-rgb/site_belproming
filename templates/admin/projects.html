@@ -1,0 +1,84 @@
+{% extends 'admin/base.html' %}
+{% block title %}Проекты{% endblock %}
+
+{% block content %}
+<div class="admin-head">
+  <div>
+    <h1 class="admin__h1">Проекты</h1>
+    <p class="admin__subtitle">Всего: {{ projects|length }}</p>
+  </div>
+  <a href="{{ url_for('admin.project_create') }}" class="admin-btn admin-btn--accent">
+    <i class="fas fa-plus"></i> Добавить проект
+  </a>
+</div>
+
+{% if projects %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>Заголовок (RU)</th>
+          <th>Порядок</th>
+          <th>Статус</th>
+          <th>Дата</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+          <tr>
+            <td>
+              {% if p.image %}
+                <img src="{{ url_for('uploaded_file', filename=p.image) }}"
+                     alt="" class="admin-thumb">
+              {% else %}
+                <div class="admin-thumb admin-thumb--empty"><i class="far fa-image"></i></div>
+              {% endif %}
+            </td>
+            <td><strong>{{ p.title_ru }}</strong></td>
+            <td><code>{{ p.sort_order }}</code></td>
+            <td>
+              {% if p.is_published %}
+                <span class="admin-badge admin-badge--done">Опубликован</span>
+              {% else %}
+                <span class="admin-badge admin-badge--new">Черновик</span>
+              {% endif %}
+            </td>
+            <td class="admin-table__nowrap">{{ p.created_at.strftime('%d.%m.%Y') }}</td>
+            <td class="admin-table__actions">
+              <a href="{{ url_for('admin.project_edit', project_id=p.id) }}"
+                 class="admin-icon-btn" title="Редактировать">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form method="POST"
+                    action="{{ url_for('admin.project_toggle', project_id=p.id) }}"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn"
+                        title="{% if p.is_published %}Снять с публикации{% else %}Опубликовать{% endif %}">
+                  <i class="fas fa-{% if p.is_published %}eye-slash{% else %}eye{% endif %}"></i>
+                </button>
+              </form>
+              <form method="POST"
+                    action="{{ url_for('admin.project_delete', project_id=p.id) }}"
+                    onsubmit="return confirm('Удалить проект «{{ p.title_ru }}»?');"
+                    style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="admin-icon-btn admin-icon-btn--danger" title="Удалить">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="admin-card">
+    <p class="admin-empty">Проектов пока нет. Нажмите «Добавить проект».</p>
+  </div>
+{% endif %}
+
+{% endblock %}

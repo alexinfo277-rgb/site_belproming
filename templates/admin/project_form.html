@@ -1,0 +1,92 @@
+{% extends 'admin/base.html' %}
+{% block title %}{% if item %}Редактировать{% else %}Создать{% endif %} проект{% endblock %}
+
+{% block content %}
+<h1 class="admin__h1">
+  {% if item %}Редактировать проект{% else %}Новый проект{% endif %}
+</h1>
+<p class="admin__subtitle">
+  <a href="{{ url_for('admin.projects_list') }}" class="admin-card__link">← К списку</a>
+</p>
+
+<form method="POST" enctype="multipart/form-data" class="admin-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="admin-form__grid">
+    <div class="admin-form__col">
+      <div class="admin-form__group">
+        <label>Заголовок (RU) *</label>
+        <input type="text" name="title_ru" required
+               value="{{ item.title_ru if item else '' }}">
+      </div>
+
+      <div class="admin-form__group">
+        <label>Заголовок (EN)</label>
+        <input type="text" name="title_en"
+               value="{{ item.title_en or '' if item else '' }}">
+      </div>
+
+      <div class="admin-form__group">
+        <label>Описание (RU) *</label>
+        <textarea name="desc_ru" rows="6" required>{{ item.desc_ru if item else '' }}</textarea>
+      </div>
+
+      <div class="admin-form__group">
+        <label>Описание (EN)</label>
+        <textarea name="desc_en" rows="4">{{ item.desc_en or '' if item else '' }}</textarea>
+      </div>
+    </div>
+
+    <div class="admin-form__col admin-form__col--side">
+      <div class="admin-form__group">
+        <label>Фото</label>
+
+        {% if item and item.image %}
+          <div class="admin-form__current-img">
+            <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="">
+            <p class="admin-form__hint">
+              Чтобы удалить текущее фото — нажмите кнопку ниже.
+            </p>
+          </div>
+        {% endif %}
+
+        <input type="file" name="image" accept="image/png,image/jpeg,image/webp">
+        <small>PNG, JPG, WebP. До 8 МБ. Рекомендуется горизонтальное фото, 800×500.</small>
+      </div>
+
+      <div class="admin-form__group">
+        <label>Порядок сортировки</label>
+        <input type="number" name="sort_order" value="{{ item.sort_order if item else 0 }}">
+        <small>Меньше число = выше в списке</small>
+      </div>
+
+      <div class="admin-form__group">
+        <label class="admin-form__check">
+          <input type="checkbox" name="is_published" value="1"
+                 {% if not item or item.is_published %}checked{% endif %}>
+          Опубликовать на сайте
+        </label>
+      </div>
+
+      <div class="admin-form__actions">
+        <button type="submit" class="admin-btn admin-btn--accent">
+          {% if item %}Сохранить{% else %}Создать{% endif %}
+        </button>
+        <a href="{{ url_for('admin.projects_list') }}" class="admin-btn">Отмена</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% if item and item.image %}
+  <form method="POST"
+        action="{{ url_for('admin.project_image_delete', project_id=item.id) }}"
+        class="admin-form__standalone"
+        onsubmit="return confirm('Удалить фото? Это действие нельзя отменить.');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="admin-btn admin-btn--danger">
+      <i class="fas fa-trash"></i> Удалить фото
+    </button>
+  </form>
+{% endif %}
+
+{% endblock %}

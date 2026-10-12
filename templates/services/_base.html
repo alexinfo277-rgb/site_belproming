@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }} — БелПромИнжиниринг{% endblock %}
+
+{% block content %}
+
+<!-- ═══ SERVICE HERO ═══ -->
+<section class="service-page">
+  <div class="container">
+
+    <div class="service-page__top">
+      <h1 class="service-page__title">{{ page_title }}</h1>
+      <a href="{{ url_for('main.index') }}#services" class="service-page__back">
+        {{ t.srv_back }} <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <p class="service-page__lead">{{ page_lead }}</p>
+
+  </div>
+</section>
+
+<!-- ═══ ЧТО ВХОДИТ (плитками) ═══ -->
+<section class="section service-block">
+  <div class="container">
+    <div class="s-head">
+      <div class="s-head__left">
+        <div class="s-tag"><b>/ 01</b> Что входит</div>
+        <h2 class="s-title">{{ t.srv_what_included }}</h2>
+      </div>
+    </div>
+
+    <div class="service-tiles">
+      {% block includes %}{% endblock %}
+    </div>
+  </div>
+</section>
+
+{% block extra_content %}{% endblock %}
+
+<!-- ═══ CTA С ФОРМОЙ ═══ -->
+<section class="section section--paper" id="contacts">
+  <div class="container">
+    <div class="cta">
+
+      <!-- ЛЕВО: контакты -->
+      <div class="cta__left">
+        <h2>{{ t.srv_ready_title }}</h2>
+        <p>{{ t.srv_ready_desc }}</p>
+
+        <div class="cta__info">
+          <div class="cta__info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ t.contacts_address }}</span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-phone"></i>
+            <span>+375 (29) 649-90-65 <small>Velcom</small></span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-phone"></i>
+            <span>+375 (29) 193-35-77 <small>МТС</small></span>
+          </div>
+          <div class="cta__info-item">
+            <i class="fas fa-envelope"></i>
+            <span>info@belproming.by <small>{{ t.contacts_schedule }}</small></span>
+          </div>
+        </div>
+
+        <div class="cta__messengers">
+          <a href="https://t.me/belproming" class="messenger-btn messenger-btn--tg" target="_blank" rel="noopener">
+            <i class="fab fa-telegram-plane"></i> Telegram
+          </a>
+          <a href="viber://chat?number=375296499065" class="messenger-btn messenger-btn--viber" target="_blank" rel="noopener">
+            <i class="fab fa-viber"></i> Viber
+          </a>
+          <a href="https://wa.me/375296499065" class="messenger-btn messenger-btn--wa" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- ПРАВО: форма -->
+      <div class="cta__form">
+        <h3>{{ t.cta_form_title }}</h3>
+
+        <form id="contactForm" action="/submit" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="form-honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="cta__form-row">
+            <input type="text" name="name" placeholder="{{ t.form_name }}" required>
+            <input type="text" name="company" placeholder="{{ t.form_company }}">
+          </div>
+
+          <div class="cta__form-row">
+            <input type="email" name="email" placeholder="{{ t.form_email }}">
+            <input type="tel" name="phone" placeholder="{{ t.form_phone }}" required>
+          </div>
+
+          <select name="service">
+            <option value="">{{ t.form_service_select }}</option>
+            <option value="engineering">{{ t.form_srv_eng }}</option>
+            <option value="installation">{{ t.form_srv_inst }}</option>
+            <option value="machining">{{ t.form_srv_mach }}</option>
+            <option value="automation">{{ t.form_srv_auto }}</option>
+          </select>
+
+          <textarea name="message" rows="3" placeholder="{{ t.form_message }}"></textarea>
+
+          <label class="cta__form-privacy">
+            <input type="checkbox" name="privacy" value="1" required>
+            <span>{{ t.form_privacy }}</span>
+          </label>
+
+          <button type="submit">
+            {{ t.cta_form_submit }} <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div id="formMessage" class="form-message" style="display:none;margin-top:14px"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

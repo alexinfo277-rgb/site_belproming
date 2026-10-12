@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход в админку — БелПромИнжиниринг</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-login">
+
+  <div class="admin-login__card">
+    <h1 class="admin-login__title">Вход в админку</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, msg in messages %}
+        <div class="admin__flash admin__flash--{{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" class="admin-login__form">
+      {{ form.hidden_tag() }}
+
+      <div class="admin-login__group">
+        {{ form.username.label }}
+        {{ form.username(class="admin-login__input", autofocus=true) }}
+        {% for err in form.username.errors %}
+          <span class="admin-login__error">{{ err }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="admin-login__group">
+        {{ form.password.label }}
+        {{ form.password(class="admin-login__input") }}
+        {% for err in form.password.errors %}
+          <span class="admin-login__error">{{ err }}</span>
+        {% endfor %}
+      </div>
+
+      <label class="admin-login__check">
+        {{ form.remember() }} Запомнить меня
+      </label>
+
+      <button type="submit" class="admin-login__btn">Войти</button>
+    </form>
+
+    <a href="{{ url_for('main.index') }}" class="admin-login__back">← На сайт</a>
+  </div>
+
+</body>
+</html>

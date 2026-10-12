@@ -1,0 +1,44 @@
+{% extends 'services/_base.html' %}
+{% set page_tag = 'Механическая обработка' %}
+{% set page_title = t.srv_machining %}
+{% set page_lead = t.mach_hero_lead %}
+
+{% block includes %}
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-water"></i></div>
+    <h3>{{ t.mach_incl_1 }}</h3>
+    <p>{{ t.mach_incl_1_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-compress-arrows-alt"></i></div>
+    <h3>{{ t.mach_incl_2 }}</h3>
+    <p>{{ t.mach_incl_2_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-circle-notch"></i></div>
+    <h3>{{ t.mach_incl_3 }}</h3>
+    <p>{{ t.mach_incl_3_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-border-style"></i></div>
+    <h3>{{ t.mach_incl_4 }}</h3>
+    <p>{{ t.mach_incl_4_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-cut"></i></div>
+    <h3>{{ t.mach_incl_5 }}</h3>
+    <p>{{ t.mach_incl_5_d }}</p>
+  </div>
+
+  <div class="service-tile">
+    <div class="service-tile__icon"><i class="fas fa-fire"></i></div>
+    <h3>{{ t.mach_incl_6 }}</h3>
+    <p>{{ t.mach_incl_6_d }}</p>
+  </div>
+
+{% endblock %}
