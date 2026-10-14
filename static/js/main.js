@@ -426,7 +426,7 @@
   let heroSlideIndex = 0;
   let heroSlideTimer = null;
 
-  if (heroVideos.length > 1) {
+  if (heroVideos.length >= 1) {
     const switchHeroSlide = (index) => {
       // Нормализуем индекс (зацикливаем)
       heroSlideIndex = (index + heroVideos.length) % heroVideos.length;

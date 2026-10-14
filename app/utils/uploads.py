@@ -27,41 +27,52 @@ def _translit(name: str) -> str:
     return name or 'file'
 
 
-def save_upload(file) -> str | None:
+def save_upload(file, subfolder: str = '', allowed: set | None = None) -> str | None:
     """
-    Сохраняет файл в UPLOAD_FOLDER.
-    Возвращает имя сохранённого файла или None, если файл невалидный.
+    Сохраняет файл в UPLOAD_FOLDER (или в UPLOAD_FOLDER/subfolder).
+    Возвращает относительный путь ('имя.mp4' или 'hero/имя.mp4') или None.
+
+    :param subfolder: подпапка внутри UPLOAD_FOLDER (например 'hero')
+    :param allowed:   своё множество расширений; по умолчанию — ALLOWED_EXTENSIONS
     """
     if not file or not file.filename:
         return None
 
     original = file.filename
 
-    # Расширение берём из ОРИГИНАЛЬНОГО имени — не через secure_filename
     if '.' not in original:
         return None
     ext = original.rsplit('.', 1)[-1].lower()
 
-    if ext not in current_app.config['ALLOWED_EXTENSIONS']:
+    allowed_exts = allowed if allowed is not None else current_app.config['ALLOWED_EXTENSIONS']
+    if ext not in allowed_exts:
         return None
 
-    # Транслитерируем имя без расширения (для читаемости — можно и без него)
     base = _translit(original.rsplit('.', 1)[0])[:40]
     unique = f"{base}-{uuid.uuid4().hex[:8]}.{ext}"
 
-    folder = Path(current_app.config['UPLOAD_FOLDER'])
+    root = Path(current_app.config['UPLOAD_FOLDER'])
+    folder = root / subfolder if subfolder else root
     folder.mkdir(parents=True, exist_ok=True)
     file.save(folder / unique)
-    return unique
+
+    return f"{subfolder}/{unique}" if subfolder else unique
 
 
 def delete_upload(filename: str | None) -> None:
-    """Удаляет файл из UPLOAD_FOLDER, если он существует."""
+    """Удаляет файл из UPLOAD_FOLDER (учитывает подпапки)."""
     if not filename:
         return
     path = Path(current_app.config['UPLOAD_FOLDER']) / filename
     if path.exists():
         try:
             path.unlink()
+            # Заодно подчистим пустую подпапку
+            parent = path.parent
+            if parent != Path(current_app.config['UPLOAD_FOLDER']) and parent.is_dir():
+                try:
+                    parent.rmdir()  # сработает только если пустая
+                except OSError:
+                    pass
         except OSError:
             current_app.logger.exception(f'Не удалось удалить файл {path}')

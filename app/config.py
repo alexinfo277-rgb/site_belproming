@@ -16,8 +16,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     UPLOAD_FOLDER = BASE_DIR / 'uploads'
-    MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 МБ на файл
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+    MAX_CONTENT_LENGTH = 200 * 1024 * 1024  # 200 МБ
+    ALLOWED_EXTENSIONS = {
+        # картинки
+        'png', 'jpg', 'jpeg', 'webp', 'gif', 'svg',
+        # видео для hero
+        'mp4', 'webm', 'mov',
+    }
 
     CACHE_TYPE = 'SimpleCache'
     CACHE_DEFAULT_TIMEOUT = 300

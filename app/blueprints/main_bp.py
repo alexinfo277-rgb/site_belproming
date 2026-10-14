@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, Response, current_app, send_from_directory
-from app.models import News, Project, Equipment
+from app.models import News, Project, Equipment, HeroVideo
 
 main_bp = Blueprint('main', __name__)
 
@@ -7,6 +7,11 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def index():
     """Главная страница."""
+    hero_videos = (HeroVideo.query
+                   .filter_by(is_active=True)
+                   .order_by(HeroVideo.sort_order, HeroVideo.id)
+                   .all())
+
     projects = (Project.query
                 .filter_by(is_published=True)
                 .order_by(Project.sort_order, Project.created_at.desc())
@@ -26,6 +31,7 @@ def index():
 
     return render_template(
         'index.html',
+        hero_videos=hero_videos,
         projects=projects,
         equipment_preview=equipment_preview,
         latest_news=latest_news,
@@ -34,7 +40,6 @@ def index():
 
 @main_bp.route('/sitemap.xml')
 def sitemap():
-    from app.models import News
     pages = []
     pages.append({'loc': url_for('main.index', _external=True), 'priority': '1.0'})
     pages.append({'loc': url_for('news.list_news', _external=True), 'priority': '0.8'})
@@ -58,6 +63,7 @@ def sitemap():
         xml += '  </url>\n'
     xml += '</urlset>'
     return Response(xml, mimetype='application/xml')
+
 
 @main_bp.route('/robots.txt')
 def robots():

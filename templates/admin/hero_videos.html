@@ -1,0 +1,64 @@
+{% extends 'admin/base.html' %}
+{% block title %}Видео на главной{% endblock %}
+
+{% block content %}
+<div class="admin__header">
+  <h1>Видео на главной</h1>
+  <a href="{{ url_for('admin.hero_video_new') }}" class="admin-btn admin-btn--primary">
+    <i class="fas fa-plus"></i> Добавить видео
+  </a>
+</div>
+
+{% if videos %}
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Превью</th>
+      <th>Название</th>
+      <th>Файл</th>
+      <th>Порядок</th>
+      <th>Статус</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in videos %}
+    <tr>
+      <td>{{ v.id }}</td>
+      <td style="width:120px">
+        <video src="{{ url_for('static', filename=v.filename) if v.filename.startswith('uploads') else url_for('uploaded_file', filename=v.filename) }}"
+               style="width:100px;height:56px;object-fit:cover;border-radius:4px;background:#000"
+               muted></video>
+      </td>
+      <td>{{ v.title or '—' }}</td>
+      <td><code>{{ v.filename }}</code></td>
+      <td>{{ v.sort_order }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('admin.hero_video_toggle', vid=v.id) }}" style="display:inline">
+          <button type="submit" class="admin-badge {% if v.is_active %}admin-badge--success{% else %}admin-badge--muted{% endif %}">
+            {% if v.is_active %}Активно{% else %}Скрыто{% endif %}
+          </button>
+        </form>
+      </td>
+      <td class="admin-table__actions">
+        <a href="{{ url_for('admin.hero_video_edit', vid=v.id) }}" class="admin-btn admin-btn--sm">
+          <i class="fas fa-pen"></i>
+        </a>
+        <form method="POST" action="{{ url_for('admin.hero_video_delete', vid=v.id) }}"
+              onsubmit="return confirm('Удалить видео?')" style="display:inline">
+          <button type="submit" class="admin-btn admin-btn--sm admin-btn--danger">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="admin-empty">
+  <p>Пока нет видео. Загрузите первое — оно появится в hero-блоке на главной.</p>
+</div>
+{% endif %}
+{% endblock %}

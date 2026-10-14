@@ -34,6 +34,10 @@
          class="admin__nav-link {% if request.endpoint and 'project' in request.endpoint %}active{% endif %}">
         <i class="fas fa-images"></i> Проекты
       </a>
+      <a href="{{ url_for('admin.hero_videos_list') }}"
+          class="admin__nav-link {% if 'hero_video' in request.endpoint %}active{% endif %}">
+        <i class="fas fa-film"></i> Видео на главной
+      </a>
       <a href="{{ url_for('admin.equipment_list') }}"
          class="admin__nav-link {% if request.endpoint and 'equipment' in request.endpoint %}active{% endif %}">
         <i class="fas fa-cogs"></i> Оборудование

@@ -109,3 +109,18 @@ class EquipmentCategory(db.Model):
 
     def __repr__(self):
         return f'<EquipmentCategory {self.slug}>'
+
+
+class HeroVideo(db.Model):
+    __tablename__ = 'hero_videos'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), default='')  # подпись (необязательно)
+    filename = db.Column(db.String(255), nullable=False)  # путь к mp4
+    poster = db.Column(db.String(255), default='')  # превью-картинка (необязательно)
+    sort_order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<HeroVideo {self.id} {self.filename}>'

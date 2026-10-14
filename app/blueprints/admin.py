@@ -11,7 +11,7 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired
 
 from app.extensions import db, limiter
-from app.models import User, Request, News, Project, Equipment, EquipmentCategory
+from app.models import User, Request, News, Project, Equipment, EquipmentCategory, HeroVideo
 
 from app.utils.uploads import save_upload, delete_upload
 
@@ -604,3 +604,97 @@ def equipment_category_toggle(cat_id):
     state = 'видна на сайте' if item.is_published else 'скрыта с фильтров'
     flash(f'Категория «{item.name_ru}» — {state}', 'success')
     return redirect(url_for('admin.equipment_categories_list'))
+
+# ─── Список видео ───
+@admin_bp.route('/hero-videos')
+@login_required
+def hero_videos_list():
+    videos = HeroVideo.query.order_by(HeroVideo.sort_order, HeroVideo.id).all()
+    return render_template('admin/hero_videos.html', videos=videos)
+
+
+# ─── Загрузка нового видео ───
+@admin_bp.route('/hero-videos/new', methods=['GET', 'POST'])
+@login_required
+def hero_video_new():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        sort_order = request.form.get('sort_order', 0, type=int)
+        is_active = bool(request.form.get('is_active'))
+
+        file = request.files.get('video')
+        if not file or not file.filename:
+            flash('Выберите видеофайл', 'error')
+            return redirect(request.url)
+
+        # Разрешаем только видео
+        allowed = {'mp4', 'webm', 'mov'}
+        ext = file.filename.rsplit('.', 1)[-1].lower()
+        if ext not in allowed:
+            flash('Допустимы только mp4, webm, mov', 'error')
+            return redirect(request.url)
+
+        filename = save_upload(file, subfolder='hero')
+
+        video = HeroVideo(
+            title=title,
+            filename=filename,
+            sort_order=sort_order,
+            is_active=is_active,
+        )
+        db.session.add(video)
+        db.session.commit()
+        flash('Видео добавлено', 'success')
+        return redirect(url_for('admin.hero_videos_list'))
+
+    return render_template('admin/hero_video_form.html', video=None)
+
+
+# ─── Редактирование ───
+@admin_bp.route('/hero-videos/<int:vid>/edit', methods=['GET', 'POST'])
+@login_required
+def hero_video_edit(vid):
+    video = HeroVideo.query.get_or_404(vid)
+
+    if request.method == 'POST':
+        video.title = request.form.get('title', '').strip()
+        video.sort_order = request.form.get('sort_order', 0, type=int)
+        video.is_active = bool(request.form.get('is_active'))
+
+        # Если загрузили новое видео — заменяем старое
+        file = request.files.get('video')
+        if file and file.filename:
+            ext = file.filename.rsplit('.', 1)[-1].lower()
+            if ext not in {'mp4', 'webm', 'mov'}:
+                flash('Допустимы только mp4, webm, mov', 'error')
+                return redirect(request.url)
+            delete_upload(video.filename)
+            video.filename = save_upload(file, subfolder='hero')
+
+        db.session.commit()
+        flash('Видео обновлено', 'success')
+        return redirect(url_for('admin.hero_videos_list'))
+
+    return render_template('admin/hero_video_form.html', video=video)
+
+
+# ─── Удаление ───
+@admin_bp.route('/hero-videos/<int:vid>/delete', methods=['POST'])
+@login_required
+def hero_video_delete(vid):
+    video = HeroVideo.query.get_or_404(vid)
+    delete_upload(video.filename)
+    db.session.delete(video)
+    db.session.commit()
+    flash('Видео удалено', 'success')
+    return redirect(url_for('admin.hero_videos_list'))
+
+
+# ─── Быстрое вкл/выкл ───
+@admin_bp.route('/hero-videos/<int:vid>/toggle', methods=['POST'])
+@login_required
+def hero_video_toggle(vid):
+    video = HeroVideo.query.get_or_404(vid)
+    video.is_active = not video.is_active
+    db.session.commit()
+    return redirect(url_for('admin.hero_videos_list'))

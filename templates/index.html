@@ -9,29 +9,17 @@
   {# ─── Фоновые видео (стопкой) ─── #}
   <div class="hero__bg-video">
 
-    <video class="hero__video active"
-           autoplay muted playsinline preload="auto"
-           poster="{{ url_for('static', filename='img/hero-poster.webp') }}"
-           data-slide="0">
-      <source src="{{ url_for('static', filename='video/hero.webm') }}" type="video/webm">
-      <source src="{{ url_for('static', filename='video/hero.mp4') }}" type="video/mp4">
-    </video>
-
-    <video class="hero__video"
+    <div class="hero__bg-video">
+  {% for v in hero_videos %}
+      <video class="hero__video{% if loop.first %} active{% endif %}"
            muted playsinline preload="auto"
-           poster="{{ url_for('static', filename='img/hero-poster-2.webp') }}"
-           data-slide="1">
-      <source src="{{ url_for('static', filename='video/hero2.webm') }}" type="video/webm">
-      <source src="{{ url_for('static', filename='video/hero2.mp4') }}" type="video/mp4">
-    </video>
-
-     <video class="hero__video"
-           muted playsinline preload="auto"
-           poster="{{ url_for('static', filename='img/hero-poster-3.webp') }}"
-           data-slide="2">
-      <source src="{{ url_for('static', filename='video/hero3.webm') }}" type="video/webm">
-      <source src="{{ url_for('static', filename='video/hero3.mp4') }}" type="video/mp4">
-    </video>
+           data-slide="{{ loop.index0 }}"
+           {% if v.poster %}poster="{{ url_for('uploaded_file', filename=v.poster) }}"{% endif %}>
+        <source src="{{ url_for('uploaded_file', filename=v.filename) }}"
+              type="video/{{ v.filename.rsplit('.', 1)[-1] }}">
+      </video>
+      {% endfor %}
+    </div>
 
   </div>
 
@@ -90,9 +78,12 @@
 
   {# ─── Кружочки-переключатели ─── #}
   <div class="hero__dots" id="heroDots">
-    <button class="hero__dot active" data-slide="0" type="button" aria-label="Видео 1"></button>
-    <button class="hero__dot" data-slide="1" type="button" aria-label="Видео 2"></button>
-    <button class="hero__dot" data-slide="2" type="button" aria-label="Видео 3"></button>
+  {% for v in hero_videos %}
+    <button class="hero__dot{% if loop.first %} active{% endif %}"
+            data-slide="{{ loop.index0 }}"
+            type="button"
+            aria-label="Видео {{ loop.index }}"></button>
+  {% endfor %}
   </div>
 
 </section>

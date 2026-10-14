@@ -1,0 +1,50 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Редактировать' if video else 'Новое' }} видео{% endblock %}
+
+{% block content %}
+<div class="admin__header">
+  <h1>{{ 'Редактировать видео' if video else 'Новое видео' }}</h1>
+  <a href="{{ url_for('admin.hero_videos_list') }}" class="admin-btn">
+    <i class="fas fa-arrow-left"></i> Назад
+  </a>
+</div>
+
+<form method="POST" enctype="multipart/form-data" class="admin-form">
+  <div class="admin-form__group">
+    <label for="title">Название (для админки, необязательно)</label>
+    <input type="text" id="title" name="title" value="{{ video.title if video else '' }}">
+  </div>
+
+  <div class="admin-form__group">
+    <label for="video">Видеофайл (mp4 / webm / mov)</label>
+    <input type="file" id="video" name="video" accept="video/mp4,video/webm,video/quicktime"
+           {% if not video %}required{% endif %}>
+    {% if video %}
+      <p class="admin-form__hint">
+        Текущий файл: <code>{{ video.filename }}</code>. Оставьте поле пустым, чтобы не менять.
+      </p>
+      <video src="..." controls style="max-width:320px;margin-top:8px;border-radius:6px"></video>
+    {% endif %}
+  </div>
+
+  <div class="admin-form__row">
+    <div class="admin-form__group">
+      <label for="sort_order">Порядок</label>
+      <input type="number" id="sort_order" name="sort_order"
+             value="{{ video.sort_order if video else 0 }}">
+    </div>
+
+    <div class="admin-form__group admin-form__group--checkbox">
+      <label>
+        <input type="checkbox" name="is_active"
+               {% if not video or video.is_active %}checked{% endif %}>
+        Показывать на главной
+      </label>
+    </div>
+  </div>
+
+  <button type="submit" class="admin-btn admin-btn--primary">
+    <i class="fas fa-save"></i> Сохранить
+  </button>
+</form>
+{% endblock %}
